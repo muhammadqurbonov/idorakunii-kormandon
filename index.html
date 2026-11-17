@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рӯйхати кормандон</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #1a56db;
+            margin-top: 0;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        .btn-add {
+            background-color: #1a56db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .btn-add:hover {
+            background-color: #1648b8;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th {
+            background-color: #1a56db;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ffffff;
+        }
+        td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+            background-color: #f9fafb;
+        }
+        .btn-delete {
+            background-color: #dc2626;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .btn-delete:hover {
+            background-color: #b91c1c;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Илова кардани корманд</h2>
+    <input type="text" id="nameInput" placeholder="Ному насаб" value="Курбонов Мухаммалшариф">
+    <input type="text" id="roleInput" placeholder="Вазифа" value="Барномасоз">
+    <input type="number" id="salaryInput" placeholder="Маош" value="4000">
+    <button class="btn-add" onclick="addEmployee()">Илова кардан</button>
+
+    <h2>Рӯйхати кормандон</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>Ному насаб</th>
+                <th>Вазифа</th>
+                <th>Маош</th>
+                <th>Амал</th>
+            </tr>
+        </thead>
+        <tbody id="employeeTableBody">
+            <!-- Строки будут добавляться сюда -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function addEmployee() {
+        const name = document.getElementById('nameInput').value.trim();
+        const role = document.getElementById('roleInput').value.trim();
+        const salary = document.getElementById('salaryInput').value.trim();
+
+        if (name === '' || role === '' || salary === '') {
+            alert('Лутфан, ҳамаи майдонҳоро пур кунед!');
+            return;
+        }
+
+        const tableBody = document.getElementById('employeeTableBody');
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+            <td class="row-number"></td>
+            <td>${name}</td>
+            <td>${role}</td>
+            <td>${salary}</td>
+            <td><button class="btn-delete" onclick="deleteRow(this)">Нест кардан</button></td>
+        `;
+
+        tableBody.appendChild(row);
+        updateRowNumbers();
+
+        // Очистка полей после добавления
+        document.getElementById('nameInput').value = '';
+        document.getElementById('roleInput').value = '';
+        document.getElementById('salaryInput').value = '';
+    }
+
+    function deleteRow(button) {
+        const row = button.parentElement.parentElement;
+        row.remove();
+        updateRowNumbers();
+    }
+
+    function updateRowNumbers() {
+        const rows = document.querySelectorAll('#employeeTableBody tr');
+        rows.forEach((row, index) => {
+            row.querySelector('.row-number').textContent = index + 1;
+        });
+    }
+</script>
+
+</body>
+</html>
