@@ -1,152 +1,114 @@
 <!DOCTYPE html>
 <html lang="tg">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Рӯйхати кормандон</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: #ffffff;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        h2 {
-            color: #1a56db;
-            margin-top: 0;
-        }
-        input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-        .btn-add {
-            background-color: #1a56db;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        .btn-add:hover {
-            background-color: #1648b8;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        th {
-            background-color: #1a56db;
-            color: white;
-            padding: 12px;
-            text-align: center;
-            border: 1px solid #ffffff;
-        }
-        td {
-            padding: 10px;
-            text-align: center;
-            border-bottom: 1px solid #e5e7eb;
-            background-color: #f9fafb;
-        }
-        .btn-delete {
-            background-color: #dc2626;
-            color: white;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-        .btn-delete:hover {
-            background-color: #b91c1c;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Идоракунии кормандон</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
+<header class="top">
+  <div class="brand"><span class="logo">К</span><div><h1 data-i18n="title"></h1><p data-i18n="subtitle"></p></div></div>
+  <div class="top-actions">
+    <select id="lang" class="lang" aria-label="Language">
+      <option value="tg">Тоҷикӣ</option><option value="ru">Русский</option><option value="en">English</option>
+    </select>
+    <button class="btn ghost" id="themeBtn" data-i18n="theme"></button>
+    <span class="chip" id="userChip" data-show="auth" hidden></span>
+    <button class="btn ghost" id="pwBtn" data-show="auth" data-i18n="chPass" hidden></button>
+    <button class="btn ghost" id="exportBtn" data-show="admin" data-i18n="export" hidden></button>
+    <button class="btn primary" id="addBtn" data-show="admin" data-i18n="add" hidden></button>
+    <button class="btn ghost" id="logoutBtn" data-show="auth" data-i18n="logout" hidden></button>
+  </div>
+</header>
 
-<div class="container">
-    <h2>Илова кардани корманд</h2>
-    <input type="text" id="nameInput" placeholder="Ному насаб" value="Курбонов Мухаммалшариф">
-    <input type="text" id="roleInput" placeholder="Вазифа" value="Барномасоз">
-    <input type="number" id="salaryInput" placeholder="Маош" value="4000">
-    <button class="btn-add" onclick="addEmployee()">Илова кардан</button>
+<section id="loginView" class="login-wrap" hidden>
+  <div class="login-card">
+    <span class="logo big">К</span>
+    <h2 data-i18n="loginTitle"></h2>
+    <p class="sub" data-i18n="loginSub"></p>
+    <form id="loginForm" novalidate>
+      <label><span data-i18n="lLogin"></span><input id="lgUser" autocomplete="username" autofocus></label>
+      <label><span data-i18n="lPass"></span><input id="lgPass" type="password" autocomplete="current-password"></label>
+      <div id="lgErr" class="err" role="alert"></div>
+      <button class="btn primary wide" type="submit" data-i18n="signIn"></button>
+    </form>
+  </div>
+</section>
 
-    <h2>Рӯйхати кормандон</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>№</th>
-                <th>Ному насаб</th>
-                <th>Вазифа</th>
-                <th>Маош</th>
-                <th>Амал</th>
-            </tr>
-        </thead>
-        <tbody id="employeeTableBody">
-            <!-- Строки будут добавляться сюда -->
-        </tbody>
-    </table>
+<main id="selfView" hidden>
+  <div class="profile" id="profile"></div>
+</main>
+
+<main id="adminView" hidden>
+  <section class="stats">
+    <div class="stat"><span data-i18n="stCount"></span><b id="stCount">0</b></div>
+    <div class="stat"><span data-i18n="stTotal"></span><b id="stTotal">0</b></div>
+    <div class="stat"><span data-i18n="stAvg"></span><b id="stAvg">0</b></div>
+    <div class="stat"><span data-i18n="stActive"></span><b id="stActive">0</b></div>
+  </section>
+
+  <section class="panel">
+    <div class="toolbar">
+      <input id="search" type="search" data-i18n-ph="search">
+      <select id="fDept"></select>
+      <select id="fStatus"></select>
+      <select id="sortBy">
+        <option value="name-asc" data-i18n="nameAsc"></option>
+        <option value="name-desc" data-i18n="nameDesc"></option>
+        <option value="salary-desc" data-i18n="salDesc"></option>
+        <option value="salary-asc" data-i18n="salAsc"></option>
+        <option value="date-desc" data-i18n="dateDesc"></option>
+        <option value="date-asc" data-i18n="dateAsc"></option>
+      </select>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>№</th><th data-i18n="hName"></th><th data-i18n="hRole"></th><th data-i18n="hLogin"></th><th data-i18n="hDept"></th><th data-i18n="hPhone"></th><th data-i18n="hSalary"></th><th data-i18n="hDate"></th><th data-i18n="hStatus"></th><th data-i18n="hAct"></th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div id="empty" class="empty" hidden><b data-i18n="emptyT"></b><p data-i18n="emptyP"></p></div>
+    </div>
+
+    <div class="pager"><span id="pageInfo"></span><div id="pageBtns"></div></div>
+  </section>
+</main>
+
+<div class="overlay" id="formModal" hidden>
+  <form class="modal" id="empForm" novalidate>
+    <h2 id="formTitle"></h2>
+    <div class="grid">
+      <label><span data-i18n="lName"></span><input id="fName" data-i18n-ph="phName"><small></small></label>
+      <label><span data-i18n="lRole"></span><input id="fRole" data-i18n-ph="phRole"><small></small></label>
+      <label><span data-i18n="lDept"></span><select id="fDeptSel"></select></label>
+      <label><span data-i18n="lPhone"></span><input id="fPhone" placeholder="+992 900 00 00 00"><small></small></label>
+      <label><span data-i18n="lEmail"></span><input id="fEmail" type="email" placeholder="name@mail.tj"><small></small></label>
+      <label><span data-i18n="lSalary"></span><input id="fSalary" type="number" min="1" placeholder="4000"><small></small></label>
+      <label><span data-i18n="lDate"></span><input id="fDate" type="date"><small></small></label>
+      <label><span data-i18n="lStatus"></span><select id="fStat"></select></label>
+      <label><span data-i18n="lLogin"></span><input id="fLogin" autocomplete="off" placeholder="m.kurbonov"><small></small></label>
+      <label><span data-i18n="lPass"></span><input id="fPass" type="text" autocomplete="new-password"><small id="passHint"></small></label>
+    </div>
+    <div class="modal-actions"><button type="button" class="btn ghost" id="cancelBtn" data-i18n="cancel"></button><button class="btn primary" type="submit" data-i18n="save"></button></div>
+  </form>
 </div>
 
-<script>
-    function addEmployee() {
-        const name = document.getElementById('nameInput').value.trim();
-        const role = document.getElementById('roleInput').value.trim();
-        const salary = document.getElementById('salaryInput').value.trim();
-
-        if (name === '' || role === '' || salary === '') {
-            alert('Лутфан, ҳамаи майдонҳоро пур кунед!');
-            return;
-        }
-
-        const tableBody = document.getElementById('employeeTableBody');
-        const row = document.createElement('tr');
-
-        row.innerHTML = `
-            <td class="row-number"></td>
-            <td>${name}</td>
-            <td>${role}</td>
-            <td>${salary}</td>
-            <td><button class="btn-delete" onclick="deleteRow(this)">Нест кардан</button></td>
-        `;
-
-        tableBody.appendChild(row);
-        updateRowNumbers();
-
-        // Очистка полей после добавления
-        document.getElementById('nameInput').value = '';
-        document.getElementById('roleInput').value = '';
-        document.getElementById('salaryInput').value = '';
-    }
-
-    function deleteRow(button) {
-        const row = button.parentElement.parentElement;
-        row.remove();
-        updateRowNumbers();
-    }
-
-    function updateRowNumbers() {
-        const rows = document.querySelectorAll('#employeeTableBody tr');
-        rows.forEach((row, index) => {
-            row.querySelector('.row-number').textContent = index + 1;
-        });
-    }
-</script>
-
+<div class="overlay" id="delModal" hidden>
+  <div class="modal small"><h2 data-i18n="delTitle"></h2><p id="delText"></p>
+    <div class="modal-actions"><button class="btn ghost" id="delNo" data-i18n="no"></button><button class="btn danger" id="delYes" data-i18n="delYes"></button></div></div>
+</div>
+<div class="overlay" id="pwModal" hidden>
+  <form class="modal small" id="pwForm" novalidate>
+    <h2 id="pwTitle" data-i18n="chPass"></h2>
+    <label id="pwLoginRow" hidden><span data-i18n="lLogin"></span><input id="pwLogin" autocomplete="username"><small></small></label>
+    <label><span data-i18n="curPass"></span><input id="pwCur" type="password" autocomplete="current-password"><small></small></label>
+    <label><span data-i18n="newPass"></span><input id="pwNew" type="password" autocomplete="new-password"><small></small></label>
+    <label><span data-i18n="repPass"></span><input id="pwRep" type="password" autocomplete="new-password"><small></small></label>
+    <div class="modal-actions"><button type="button" class="btn ghost" id="pwCancel" data-i18n="cancel"></button><button class="btn primary" type="submit" data-i18n="save"></button></div>
+  </form>
+</div>
+<div id="toasts"></div>
+<script src="script.js"></script>
 </body>
 </html>
